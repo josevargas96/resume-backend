@@ -1,0 +1,137 @@
+# src/resumepulse/config/tasks.yaml
+
+parse_resume_task:
+  description: >
+    Analyze the provided resume JSON data to extract a comprehensive profile:
+    1. Extract personal information (name, contact details, location)
+    2. Identify key skills and competencies
+    3. Extract professional experience with details of achievements
+    4. Extract educational background
+    5. Identify any gaps or areas that could be enhanced
+  expected_output: >
+    {
+      "personal_info": {
+        "name": "Candidate name",
+        "email": "email address",
+        "phone": "phone number",
+        "location": "location"
+      },
+      "objective": "Career objective statement",
+      "skills": [
+        {"category": "Skill category", "items": ["skill1", "skill2"]}
+      ],
+      "experience": [
+        {
+          "company": "Company name",
+          "title": "Job title",
+          "dates": "Employment period",
+          "achievements": ["Achievement description"]
+        }
+      ],
+      "education": [
+        {
+          "institution": "School name",
+          "degree": "Degree earned",
+          "dates": "Study period",
+          "details": "Additional information"
+        }
+      ],
+      "gaps": [
+        {"area": "Area with gaps", "details": "Description of what's missing"}
+      ]
+    }
+  agent: resume_parser_agent
+
+generate_profile_questions_task:
+  description: >
+    Based on the parsed resume {resume_data} and job description {job_description},
+    generate targeted questions to enhance the candidate's profile:
+    1. Identify gaps between the resume and job requirements
+    2. Generate questions to elicit more detailed information about relevant experiences
+    3. Ask for specific achievements that align with job requirements
+    4. Explore areas where the candidate could better showcase their skills
+    5. Generate questions about how they've handled situations relevant to the role
+  expected_output: >
+    {
+      "questions": [
+        {
+          "question": "Question text",
+          "purpose": "What this question aims to uncover",
+          "relevance": "How this relates to the job description"
+        }
+      ],
+      "focus_areas": [
+        {"area": "Skill or experience area", "importance": "high/medium/low"}
+      ]
+    }
+  agent: profile_builder_agent
+  context: [parse_resume_task]
+
+analyze_company_task:
+  description: >
+    Research and analyze the company {company_name} and job description {job_description}:
+    1. Identify key requirements and qualifications from the job description
+    2. Research the company's values, culture, and mission
+    3. Investigate recent company news, projects, or achievements
+    4. If mentioned, research specific teams or departments
+    5. Identify keywords and phrases commonly used by the company
+  expected_output: >
+    {
+      "company_profile": {
+        "name": "Company name",
+        "industry": "Industry sector",
+        "values": ["Value statements"],
+        "culture": "Description of company culture",
+        "recent_news": ["Relevant news items"]
+      },
+      "job_analysis": {
+        "key_requirements": ["Required skills or qualifications"],
+        "preferred_qualifications": ["Preferred but not required qualifications"],
+        "responsibilities": ["Key job responsibilities"],
+        "team_info": "Information about the team or department"
+      },
+      "keywords": ["Important keywords or phrases"]
+    }
+  agent: company_research_agent
+
+generate_tailored_resume_task:
+  description: >
+    Create a customized resume based on the candidate profile {enhanced_profile},
+    company analysis {company_analysis}, and job description {job_description}:
+    1. Align skills and experiences with job requirements
+    2. Highlight achievements that demonstrate relevant competencies
+    3. Use language and keywords that match the company's culture and job description
+    4. Structure the resume to emphasize most relevant qualifications
+    5. Ensure all sections (personal info, objective, experience, education, skills) are optimized
+  expected_output: >
+    {
+      "personal_info": {
+        "name": "Candidate name",
+        "email": "email address",
+        "phone": "phone number",
+        "location": "location"
+      },
+      "objective": "Tailored objective statement",
+      "skills": [
+        {"category": "Skill category", "items": ["skill1", "skill2"]}
+      ],
+      "experience": [
+        {
+          "company": "Company name",
+          "title": "Job title",
+          "dates": "Employment period",
+          "achievements": ["Achievement description adjusted for relevance"]
+        }
+      ],
+      "education": [
+        {
+          "institution": "School name",
+          "degree": "Degree earned",
+          "dates": "Study period",
+          "details": "Additional information"
+        }
+      ],
+      "customization_notes": ["Notes on how the resume was customized"]
+    }
+  agent: resume_customizer_agent
+  context: [parse_resume_task, generate_profile_questions_task, analyze_company_task]
