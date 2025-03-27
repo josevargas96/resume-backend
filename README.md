@@ -1,13 +1,15 @@
-# Market Sentiment Analysis System
+# ResumePulse
 
-An automated system that analyzes financial news, market data, and influencer statements to provide personalized trading recommendations based on market sentiment.
+An automated system that helps tailor resumes to specific job descriptions and companies using AI-powered analysis and customization.
 
 ## Features
 
-- **Multi-Agent Architecture**: Leverages crewAI to orchestrate specialized agents for different aspects of market analysis
-- **Daily Sentiment Analysis**: Collects and analyzes global financial news, company-specific developments, and key influencer statements
-- **Portfolio-Aware Recommendations**: Generates trading recommendations tailored to user's portfolio and preferences
-- **Caching System**: Efficiently reuses API responses to minimize costs
+- **Multi-Agent Architecture**: Leverages crewAI to orchestrate specialized agents for different aspects of resume customization
+- **Resume Parsing**: Automatically extracts structured information from resumes
+- **Job Description Analysis**: Identifies key requirements and qualifications from job postings
+- **Company Research**: Gathers information about company culture, values, and expectations
+- **Profile Enhancement**: Generates targeted questions to help fill gaps in experience and qualifications
+- **Resume Customization**: Creates tailored resumes optimized for specific job applications
 - **API & CLI Interfaces**: Access via RESTful API or command line
 
 ## Setup Instructions
@@ -16,8 +18,8 @@ An automated system that analyzes financial news, market data, and influencer st
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/market-sentiment.git
-cd market-sentiment
+git clone https://github.com/yourusername/resume-backend.git
+cd resume-backend
 
 # Create and activate virtual environment
 python -m venv venv
@@ -36,23 +38,16 @@ cp .env.template .env
 # Edit .env and add your API keys
 # You'll need:
 # - OpenAI API key
-# - Bing Search API key
-# - Alpha Vantage API key
+# - Bing Search API key (for company research)
 ```
 
-### 3. Create Portfolio and Preferences Files
-
-See examples in the `examples/` directory:
-- `portfolio.json`: Your stock holdings
-- `preferences.json`: Your investment preferences
-
-### 4. Running the Application
+### 3. Running the Application
 
 #### Via CLI:
 
 ```bash
-# Run a one-time analysis
-python -m src.market_sentiment.cli --portfolio examples/portfolio.json --preferences examples/preferences.json --output analysis.json
+# Run a one-time resume customization
+python -m src.resumepulse.cli --resume examples/resume.json --job-description examples/job_description.txt --company "Example Corp"
 ```
 
 #### As a Web Service:
@@ -62,16 +57,16 @@ python -m src.market_sentiment.cli --portfolio examples/portfolio.json --prefere
 python app.py
 
 # The API will be available at:
-# http://localhost:8000/api/sentiment/analyze (POST)
-# http://localhost:8000/api/sentiment/demo (GET)
+# http://localhost:8000/api/resume/analyze (POST)
+# http://localhost:8000/api/resume/demo (GET)
 ```
 
 ## API Usage
 
-### Analyze Portfolio Sentiment
+### Customize Resume
 
 ```bash
-curl -X POST http://localhost:8000/api/sentiment/analyze \
+curl -X POST http://localhost:8000/api/resume/customize \
   -H "Content-Type: application/json" \
   -d @examples/request.json
 ```
@@ -80,17 +75,45 @@ Where `request.json` contains:
 
 ```json
 {
-  "portfolio": {
-    "holdings": [
-      {"ticker": "AAPL", "company": "Apple Inc.", "allocation": 15, "sector": "Technology"}
+  "resume": {
+    "personal_info": {
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "phone": "555-123-4567",
+      "location": "San Francisco, CA"
+    },
+    "objective": "Experienced software engineer seeking challenging roles in AI development",
+    "experience": [
+      {
+        "company": "Tech Solutions Inc.",
+        "title": "Senior Developer",
+        "dates": "2018-2023",
+        "achievements": [
+          "Led team of 5 developers on major client project",
+          "Increased system performance by 35% through code optimization"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "institution": "University of California",
+        "degree": "B.S. Computer Science",
+        "dates": "2014-2018"
+      }
+    ],
+    "skills": [
+      {
+        "category": "Programming Languages",
+        "items": ["Python", "JavaScript", "Java"]
+      },
+      {
+        "category": "Frameworks",
+        "items": ["React", "Django", "TensorFlow"]
+      }
     ]
   },
-  "preferences": {
-    "risk_tolerance": "moderate",
-    "preferred_sectors": ["Technology"],
-    "preferred_regions": ["US"],
-    "investment_horizon": "medium-term"
-  }
+  "job_description": "Looking for a skilled Python developer with experience in AI/ML frameworks...",
+  "company_name": "AI Innovations Ltd."
 }
 ```
 
@@ -103,18 +126,10 @@ The application is designed to be deployed on Railway or similar platforms:
 railway up
 ```
 
-## Cost Optimization
-
-The system uses several cost-optimization strategies:
-
-1. **Intelligent Caching**: API responses are cached to avoid redundant calls
-2. **Shared Global Analysis**: Market-wide data is shared among all users
-3. **GPT-4o-mini**: Uses efficient LLM to minimize token costs
-4. **Scheduled Execution**: Runs only during market days
-
 ## Future Enhancements
 
-- Interactive Brokers integration for automated trading
-- Email delivery of daily recommendations
-- User dashboard for tracking recommendation performance
-- Custom news source integrations
+- Integration with applicant tracking systems
+- PDF resume parsing
+- Cover letter generation
+- Interview preparation assistance
+- Resume version management and tracking
